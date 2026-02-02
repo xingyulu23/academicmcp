@@ -1,13 +1,13 @@
 """Tests for BibTeX generation."""
 
 
-from academic_mcp.bibtex import (
+from academix.bibtex import (
     escape_latex,
     format_authors_bibtex,
     generate_bibtex,
     generate_bibtex_key,
 )
-from academic_mcp.models import Author, Paper, PaperSource
+from academix.models import Author, Paper, PaperSource
 
 
 class TestEscapeLatex:

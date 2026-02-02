@@ -1,7 +1,7 @@
 """Tests for cache module."""
 
 
-from academic_mcp.cache import (
+from academix.cache import (
     APICache,
     BibTeXCache,
     PaperCache,

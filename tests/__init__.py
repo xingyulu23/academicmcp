@@ -1,1 +1,1 @@
-"""Tests for academic-mcp."""
+"""Tests for academix."""

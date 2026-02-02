@@ -25,21 +25,21 @@ Designed for seamless integration with large language models like **Claude Deskt
 If you are using `uv` (recommended):
 
 ```bash
-uv tool install academic-mcp
+uv tool install academix
 ```
 
 Or with `pip`:
 
 ```bash
-pip install academic-mcp
+pip install academix
 ```
 
 ### Development Setup (for Contributors)
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/your-org/academic-mcp.git
-    cd academic-mcp
+    git clone https://github.com/your-org/academix.git
+    cd academix
     ```
 
 2.  **Install dependencies**:
@@ -49,7 +49,7 @@ pip install academic-mcp
 
 3.  **Run the server**:
     ```bash
-    uv run academic-mcp
+    uv run academix
     ```
 
 ## Configuration
@@ -64,16 +64,16 @@ To use this server with Claude Desktop, add the following to your configuration 
 ```json
 {
   "mcpServers": {
-    "academic-mcp": {
+    "academix": {
       "command": "uv",
       "args": [
         "run",
         "--directory",
-        "/absolute/path/to/academic-mcp", 
-        "academic-mcp"
+        "/absolute/path/to/academix", 
+        "academix"
       ],
       "env": {
-        "ACADEMIC_MCP_EMAIL": "your.email@example.com",
+        "ACADEMIX_EMAIL": "your.email@example.com",
         "SEMANTIC_SCHOLAR_API_KEY": "optional_api_key"
       }
     }
@@ -81,7 +81,7 @@ To use this server with Claude Desktop, add the following to your configuration 
 }
 ```
 
-> **Note**: Replace `/absolute/path/to/academic-mcp` with the actual path where you cloned the repository. Setting `ACADEMIC_MCP_EMAIL` is highly recommended to access the "polite pool" for OpenAlex and CrossRef (higher rate limits).
+> **Note**: Replace `/absolute/path/to/academix` with the actual path where you cloned the repository. Setting `ACADEMIX_EMAIL` is highly recommended to access the "polite pool" for OpenAlex and CrossRef (higher rate limits).
 
 ### 2. OpenCode Integration
 
@@ -91,17 +91,17 @@ For OpenCode, modify your configuration file (usually at `~/.config/opencode/ope
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "academic-mcp": {
+    "academix": {
       "type": "local",
       "command": [
         "uv",
         "run",
         "--directory",
-        "/absolute/path/to/academic-mcp",
-        "academic-mcp"
+        "/absolute/path/to/academix",
+        "academix"
       ],
       "environment": {
-        "ACADEMIC_MCP_EMAIL": "your.email@example.com",
+        "ACADEMIX_EMAIL": "your.email@example.com",
         "SEMANTIC_SCHOLAR_API_KEY": "optional_api_key"
       },
       "enabled": true,
@@ -114,8 +114,8 @@ For OpenCode, modify your configuration file (usually at `~/.config/opencode/ope
 **Configuration Details:**
 - **type**: Must be `"local"`.
 - **command**: The full command array to run the server. Use `uv run` pointing to the directory.
-- **directory**: Replace `/absolute/path/to/academic-mcp` with your actual path.
-- **environment**: Add API keys or email here. `ACADEMIC_MCP_EMAIL` is recommended.
+- **directory**: Replace `/absolute/path/to/academix` with your actual path.
+- **environment**: Add API keys or email here. `ACADEMIX_EMAIL` is recommended.
 - **timeout**: Optional. Increased to `10000` (10s) to handle network latency.
 
 ## Data Source Coverage
@@ -205,13 +205,13 @@ use academic_get_citations with:
 uv run pytest
 
 # Run with coverage report
-uv run pytest --cov=academic_mcp
+uv run pytest --cov=academix
 ```
 
 ### Project Structure
 ```
-academic-mcp/
-├── src/academic_mcp/
+academix/
+├── src/academix/
 │   ├── server.py          # MCP server entry point
 │   ├── aggregator.py      # Orchestrator for multiple API clients
 │   ├── clients/           # Individual API client implementations

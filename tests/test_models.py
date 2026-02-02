@@ -5,7 +5,7 @@ from datetime import date
 import pytest
 from pydantic import ValidationError
 
-from academic_mcp.models import (
+from academix.models import (
     Author,
     GetBibTeXInput,
     Paper,

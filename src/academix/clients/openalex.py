@@ -53,7 +53,7 @@ class OpenAlexClient(BaseClient):
         self._bibtex_cache = get_bibtex_cache()
         # Update user agent to include email for polite access
         if email:
-            self.user_agent = f"AcademicMCP/0.1.0 (mailto:{email})"
+            self.user_agent = f"Academix/0.1.0 (mailto:{email})"
 
     def _build_params(self, **kwargs: Any) -> dict[str, Any]:
         """Build request parameters with email if provided."""

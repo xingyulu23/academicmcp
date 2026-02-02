@@ -48,7 +48,7 @@ class CrossRefClient(BaseClient):
         self.email = email
         self._bibtex_cache = get_bibtex_cache()
         if email:
-            self.user_agent = f"AcademicMCP/0.1.0 (mailto:{email})"
+            self.user_agent = f"Academix/0.1.0 (mailto:{email})"
 
     def _build_params(self, **kwargs: Any) -> dict[str, Any]:
         """Build request parameters with mailto if provided."""

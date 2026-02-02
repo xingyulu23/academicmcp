@@ -33,7 +33,7 @@ class BaseClient(ABC):
             user_agent: Custom User-Agent header
         """
         self.timeout = timeout
-        self.user_agent = user_agent or "AcademicMCP/0.1.0 (https://github.com/academic-mcp)"
+        self.user_agent = user_agent or "Academix/0.1.0 (https://github.com/academix)"
         self._client: httpx.AsyncClient | None = None
         self._search_cache = get_search_cache()
         self._paper_cache = get_paper_cache()

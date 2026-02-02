@@ -13,14 +13,14 @@ Run all tests:
 import pytest
 
 # Import clients directly from their modules to avoid pydantic deprecation issues
-from academic_mcp.clients import (
+from academix.clients import (
     CrossRefClient,
     DBLPClient,
     OpenAlexClient,
 )
-from academic_mcp.clients.arxiv_client import ArxivClient
-from academic_mcp.clients.semantic import SemanticScholarClient
-from academic_mcp.models import PaperSource
+from academix.clients.arxiv_client import ArxivClient
+from academix.clients.semantic import SemanticScholarClient
+from academix.models import PaperSource
 
 
 @pytest.mark.integration

@@ -40,7 +40,7 @@ async def lifespan(app: FastMCP) -> AsyncIterator[None]:
     """
     global _aggregator
     _aggregator = AcademicAggregator(
-        email=os.environ.get("ACADEMIC_MCP_EMAIL"),
+        email=os.environ.get("ACADEMIX_EMAIL"),
         semantic_scholar_api_key=os.environ.get("SEMANTIC_SCHOLAR_API_KEY"),
     )
     logger.info("Academic MCP Server initialized")
@@ -54,7 +54,7 @@ async def lifespan(app: FastMCP) -> AsyncIterator[None]:
 
 
 # Initialize MCP server with lifespan for proper resource management
-mcp = FastMCP("academic_mcp", lifespan=lifespan)
+mcp = FastMCP("academix", lifespan=lifespan)
 
 
 def get_aggregator() -> AcademicAggregator:

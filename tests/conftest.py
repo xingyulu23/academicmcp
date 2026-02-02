@@ -1,4 +1,4 @@
-"""Pytest configuration and fixtures for academic-mcp tests."""
+"""Pytest configuration and fixtures for academix tests."""
 
 import pytest
 import respx
