@@ -83,6 +83,7 @@ class ArxivClient(BaseClient):
         query: str,
         limit: int = 10,
         offset: int = 0,
+        sort: str | None = None,
         year_from: int | None = None,
         year_to: int | None = None,
         venue: str | None = None,
@@ -101,6 +102,7 @@ class ArxivClient(BaseClient):
             query: Search query with optional field prefixes
             limit: Maximum results
             offset: Results to skip (for pagination)
+            sort: Sort order (relevance, publication_date, citation_count)
             year_from: Filter by minimum year
             year_to: Filter by maximum year
             venue: Not directly supported (arXiv categories instead)
@@ -110,7 +112,7 @@ class ArxivClient(BaseClient):
         """
         # Check cache
         cache_key = self._search_cache.search_key(
-            "arxiv", query, limit, offset, year_from=year_from, year_to=year_to
+            "arxiv", query, limit, offset, year_from=year_from, year_to=year_to, sort=sort
         )
         cached = self._search_cache.get(cache_key)
         if cached:
@@ -122,11 +124,20 @@ class ArxivClient(BaseClient):
         # arXiv doesn't have native year filtering in the simple API,
         # we'll filter results after retrieval if needed
 
+        # Determine sort criterion
+        sort_criterion = arxiv.SortCriterion.Relevance
+        if sort == "publication_date":
+            sort_criterion = arxiv.SortCriterion.SubmittedDate
+        elif sort == "citation_count":
+            # arXiv API doesn't support citation count sorting
+            logger.debug("Citation sort not supported by arXiv, defaulting to relevance")
+
         # Create search object
         search = arxiv.Search(
             query=search_query,
             max_results=limit + offset,  # Fetch enough to handle offset
-            sort_by=arxiv.SortCriterion.Relevance,
+            sort_by=sort_criterion,
+            sort_order=arxiv.SortOrder.Descending,
         )
 
         try:

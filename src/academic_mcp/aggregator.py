@@ -75,6 +75,7 @@ class AcademicAggregator:
         year_from: int | None = None,
         year_to: int | None = None,
         venue: str | None = None,
+        sort: str | None = None,
         **kwargs: Any,
     ) -> SearchResult:
         """Search for papers across sources.
@@ -87,6 +88,7 @@ class AcademicAggregator:
             year_from: Filter by minimum year
             year_to: Filter by maximum year
             venue: Filter by venue
+            sort: Sort order (relevance, publication_date, citation_count)
 
         Returns:
             SearchResult from the selected source
@@ -98,29 +100,84 @@ class AcademicAggregator:
             "year_from": year_from,
             "year_to": year_to,
             "venue": venue,
+            "sort": sort,
         }
 
         # Select client based on source
         if source == PaperSource.DBLP:
-            return await self.dblp.search(query, limit, offset, year_from, year_to, venue)
+            return await self.dblp.search(
+                query,
+                limit,
+                offset,
+                year_from=year_from,
+                year_to=year_to,
+                venue=venue,
+                sort=sort,
+            )
         elif source == PaperSource.SEMANTIC_SCHOLAR:
-            return await self.semantic.search(query, limit, offset, year_from, year_to, venue)
+            return await self.semantic.search(
+                query,
+                limit,
+                offset,
+                year_from=year_from,
+                year_to=year_to,
+                venue=venue,
+                sort=sort,
+            )
         elif source == PaperSource.ARXIV:
-            return await self.arxiv.search(query, limit, offset, year_from, year_to, venue)
+            return await self.arxiv.search(
+                query,
+                limit,
+                offset,
+                year_from=year_from,
+                year_to=year_to,
+                venue=venue,
+                sort=sort,
+            )
         elif source == PaperSource.CROSSREF:
-            return await self.crossref.search(query, limit, offset, year_from, year_to, venue)
+            return await self.crossref.search(
+                query,
+                limit,
+                offset,
+                year_from=year_from,
+                year_to=year_to,
+                venue=venue,
+                sort=sort,
+            )
         else:
             # Default to OpenAlex with fallback
             try:
-                return await self.openalex.search(query, limit, offset, year_from, year_to, venue)
+                return await self.openalex.search(
+                    query,
+                    limit,
+                    offset,
+                    year_from=year_from,
+                    year_to=year_to,
+                    venue=venue,
+                    sort=sort,
+                )
             except Exception as e:
                 logger.warning(f"OpenAlex search failed, trying DBLP: {e}")
                 try:
-                    return await self.dblp.search(query, limit, offset, year_from, year_to, venue)
+                    return await self.dblp.search(
+                        query,
+                        limit,
+                        offset,
+                        year_from=year_from,
+                        year_to=year_to,
+                        venue=venue,
+                        sort=sort,
+                    )
                 except Exception as e2:
                     logger.warning(f"DBLP search failed, trying Semantic Scholar: {e2}")
                     return await self.semantic.search(
-                        query, limit, offset, year_from, year_to, venue
+                        query,
+                        limit,
+                        offset,
+                        year_from=year_from,
+                        year_to=year_to,
+                        venue=venue,
+                        sort=sort,
                     )
 
     async def get_paper(

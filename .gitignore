@@ -1,0 +1,43 @@
+# Documentation
+AGENTS.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+junit/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Local verification scripts
+verify_*.py
+scratch_*.py
+

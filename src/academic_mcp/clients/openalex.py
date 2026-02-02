@@ -152,6 +152,7 @@ class OpenAlexClient(BaseClient):
         query: str,
         limit: int = 10,
         offset: int = 0,
+        sort: str | None = None,
         year_from: int | None = None,
         year_to: int | None = None,
         venue: str | None = None,
@@ -166,13 +167,21 @@ class OpenAlexClient(BaseClient):
             year_from: Filter by minimum publication year
             year_to: Filter by maximum publication year
             venue: Filter by venue name
+            sort: Sort order (relevance, publication_date, citation_count)
 
         Returns:
             SearchResult with matching papers
         """
         # Check cache
         cache_key = self._search_cache.search_key(
-            "openalex", query, limit, offset, year_from=year_from, year_to=year_to, venue=venue
+            "openalex",
+            query,
+            limit,
+            offset,
+            year_from=year_from,
+            year_to=year_to,
+            venue=venue,
+            sort=sort,
         )
         cached = self._search_cache.get(cache_key)
         if cached:
@@ -191,12 +200,22 @@ class OpenAlexClient(BaseClient):
         if venue:
             filters.append(f"primary_location.source.display_name.search:{quote_plus(venue)}")
 
+        # Map sort parameter
+        api_sort = None
+        if sort == "publication_date":
+            api_sort = "publication_date:desc"
+        elif sort == "citation_count":
+            api_sort = "cited_by_count:desc"
+        elif sort == "relevance":
+            api_sort = "relevance_score:desc"
+
         per_page = 200
         params = self._build_params(
             search=query,
             per_page=per_page,
             page=1 + (offset // per_page) if per_page > 0 else 1,
             filter=",".join(filters) if filters else None,
+            sort=api_sort,
         )
 
         try:

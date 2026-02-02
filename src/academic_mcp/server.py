@@ -141,6 +141,10 @@ async def academic_search_papers(
     year_from: int | None = Field(default=None, description="Filter papers from this year"),
     year_to: int | None = Field(default=None, description="Filter papers until this year"),
     venue: str | None = Field(default=None, description="Filter by journal/conference"),
+    sort: Literal["relevance", "publication_date", "citation_count"] = Field(
+        default="relevance",
+        description="Sort order: relevance, publication_date, or citation_count",
+    ),
     limit: int = Field(default=10, ge=1, le=100, description="Maximum results"),
     offset: int = Field(default=0, ge=0, description="Pagination offset"),
     response_format: Literal["markdown", "json"] = Field(
@@ -155,11 +159,14 @@ async def academic_search_papers(
     - Use specific keywords for better results
     - Combine with author/year/venue filters for precision
     - Use DOI for exact paper lookup
+    - Use `sort` to order by date or citations (default: relevance)
 
     **Examples:**
     - `query="attention is all you need"` - Find the Transformer paper
     - `query="machine learning", author="Hinton"` - Papers by Geoffrey Hinton
     - `query="neural networks", year_from=2020, year_to=2024` - Recent papers
+    - `query="LLM", sort="publication_date"` - Newest LLM papers
+    - `query="deep learning", sort="citation_count"` - Most cited deep learning papers
 
     Returns:
         Formatted search results with paper titles, authors, years, and IDs.
@@ -191,6 +198,7 @@ async def academic_search_papers(
             year_from=year_from,
             year_to=year_to,
             venue=venue,
+            sort=sort,
         )
 
         if response_format == "json":
@@ -200,6 +208,8 @@ async def academic_search_papers(
         lines = [f"# Search Results for: {query}", ""]
         lines.append(f"Found **{result.total_results}** papers (showing {result.returned_count})")
         lines.append(f"Source: {result.source.value}")
+        if sort and sort != "relevance":
+            lines.append(f"Sorted by: {sort}")
         lines.append("")
 
         for i, paper in enumerate(result.papers, 1 + offset):

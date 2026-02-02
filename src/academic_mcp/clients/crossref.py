@@ -128,6 +128,7 @@ class CrossRefClient(BaseClient):
         query: str,
         limit: int = 10,
         offset: int = 0,
+        sort: str | None = None,
         year_from: int | None = None,
         year_to: int | None = None,
         venue: str | None = None,
@@ -139,6 +140,7 @@ class CrossRefClient(BaseClient):
             query: Search query
             limit: Maximum results (max 1000)
             offset: Pagination offset
+            sort: Sort order (relevance, publication_date, citation_count)
             year_from: Filter by minimum year
             year_to: Filter by maximum year
             venue: Filter by container title (journal/proceedings)
@@ -148,7 +150,14 @@ class CrossRefClient(BaseClient):
         """
         # Check cache
         cache_key = self._search_cache.search_key(
-            "crossref", query, limit, offset, year_from=year_from, year_to=year_to, venue=venue
+            "crossref",
+            query,
+            limit,
+            offset,
+            year_from=year_from,
+            year_to=year_to,
+            venue=venue,
+            sort=sort,
         )
         cached = self._search_cache.get(cache_key)
         if cached:
@@ -161,11 +170,21 @@ class CrossRefClient(BaseClient):
         if year_to:
             filters.append(f"until-pub-date:{year_to}")
 
+        # Map sort parameter
+        api_sort = None
+        if sort == "publication_date":
+            api_sort = "published"
+        elif sort == "citation_count":
+            api_sort = "is-referenced-by-count"
+        elif sort == "relevance":
+            api_sort = "relevance"
+
         params = self._build_params(
             query=query,
             rows=min(limit, 1000),
             offset=offset,
             filter=",".join(filters) if filters else None,
+            sort=api_sort,
         )
 
         try:

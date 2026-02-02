@@ -101,6 +101,7 @@ class BaseClient(ABC):
         query: str,
         limit: int = 10,
         offset: int = 0,
+        sort: str | None = None,
         **kwargs: Any,
     ) -> SearchResult:
         """Search for papers.
@@ -109,6 +110,7 @@ class BaseClient(ABC):
             query: Search query
             limit: Maximum results to return
             offset: Pagination offset
+            sort: Sort order (relevance, publication_date, citation_count)
             **kwargs: Additional search parameters
 
         Returns:

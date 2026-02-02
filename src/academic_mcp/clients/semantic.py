@@ -114,6 +114,7 @@ class SemanticScholarClient(BaseClient):
         query: str,
         limit: int = 10,
         offset: int = 0,
+        sort: str | None = None,
         year_from: int | None = None,
         year_to: int | None = None,
         venue: str | None = None,
@@ -125,6 +126,7 @@ class SemanticScholarClient(BaseClient):
             query: Search query
             limit: Maximum results (1-100)
             offset: Pagination offset
+            sort: Sort order (relevance, publication_date, citation_count)
             year_from: Filter by minimum year
             year_to: Filter by maximum year
             venue: Filter by venue (not directly supported, post-filter)
@@ -134,7 +136,7 @@ class SemanticScholarClient(BaseClient):
         """
         # Check cache
         cache_key = self._search_cache.search_key(
-            "semantic", query, limit, offset, year_from=year_from, year_to=year_to
+            "semantic", query, limit, offset, year_from=year_from, year_to=year_to, sort=sort
         )
         cached = self._search_cache.get(cache_key)
         if cached:
@@ -146,6 +148,15 @@ class SemanticScholarClient(BaseClient):
             "offset": offset,
             "fields": ",".join(self.PAPER_FIELDS),
         }
+
+        # Add sort parameter
+        if sort == "publication_date":
+            params["sort"] = "publicationDate:desc"
+        elif sort == "citation_count":
+            params["sort"] = "citationCount:desc"
+        elif sort == "relevance":
+            # Default behavior, no param needed
+            pass
 
         # Add year filter
         if year_from or year_to:

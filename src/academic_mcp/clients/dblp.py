@@ -105,6 +105,7 @@ class DBLPClient(BaseClient):
         query: str,
         limit: int = 10,
         offset: int = 0,
+        sort: str | None = None,
         year_from: int | None = None,
         year_to: int | None = None,
         venue: str | None = None,
@@ -116,6 +117,7 @@ class DBLPClient(BaseClient):
             query: Search query
             limit: Maximum results (max 1000)
             offset: First result to return
+            sort: Sort order (ignored by DBLP)
             year_from: Filter by minimum year
             year_to: Filter by maximum year
             venue: Filter by venue (conference/journal)
@@ -125,11 +127,21 @@ class DBLPClient(BaseClient):
         """
         # Check cache
         cache_key = self._search_cache.search_key(
-            "dblp", query, limit, offset, year_from=year_from, year_to=year_to, venue=venue
+            "dblp",
+            query,
+            limit,
+            offset,
+            year_from=year_from,
+            year_to=year_to,
+            venue=venue,
+            sort=sort,
         )
         cached = self._search_cache.get(cache_key)
         if cached:
             return cast(SearchResult, cached)
+
+        if sort and sort != "relevance":
+            logger.debug(f"Sort option '{sort}' not supported by DBLP, ignoring")
 
         # Build query with filters
         search_query = query

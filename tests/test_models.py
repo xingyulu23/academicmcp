@@ -163,7 +163,7 @@ class TestSearchPapersInput:
     def test_query_required(self):
         """Test that query is required."""
         with pytest.raises(ValidationError):
-            SearchPapersInput(limit=10)
+            SearchPapersInput(limit=10)  # type: ignore[call-arg]
 
     def test_query_min_length(self):
         """Test minimum query length."""
